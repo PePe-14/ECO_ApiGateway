@@ -30,7 +30,7 @@ export class UserController implements OnModuleInit {
 
     @Delete(':id')
     async deleteUser(@Param('id') request: DeleteUserRequest): Promise<DeleteUserResponse> {
-        const user = this.userService.deleteUser({ id: request.id });
+        const user = this.userService.deleteUser(request);
 
         if (!isObservable(user)) {
             return user;
@@ -42,7 +42,7 @@ export class UserController implements OnModuleInit {
     @Get(':id')
     async findOneUser(@Param('id')request: FindOneUserRequest): Promise<FindOneUserResponse> {
     
-      const user = this.userService.findOneUser({ id: request.id });
+      const user = this.userService.findOneUser(request);
       if (!isObservable(user)) {
         return user;
     }
