@@ -19,9 +19,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "proto:install": "npm i git+https://github.com/PePe-14/arq_protos.git",
-    "proto:user": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto.cmd -I=./node_modules/microservicios/proto --ts_proto_out=src/user/ node_modules/microservicios/proto/users.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
-    "proto:product": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto.cmd -I=./node_modules/microservicios/proto --ts_proto_out=src/producto/ node_modules/microservicios/proto/product.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
-    "proto:order": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto.cmd -I=./node_modules/microservicios/proto --ts_proto_out=src/order/ node_modules/microservicios/proto/order.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
+    "proto:user": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto.cmd -I=./node_modules/microservicios/proto --ts_proto_out=src/ms_users/ node_modules/microservicios/proto/users.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
+    "proto:product": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto.cmd -I=./node_modules/microservicios/proto --ts_proto_out=src/ms_products/ node_modules/microservicios/proto/product.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
+    "proto:order": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto.cmd -I=./node_modules/microservicios/proto --ts_proto_out=src/ms_orders/ node_modules/microservicios/proto/order.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:all": "npm run proto:install && npm run proto:user && npm run proto:product && npm run proto:order"
   },
   "dependencies": {
@@ -31,6 +31,7 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/microservices": "^10.2.10",
     "@nestjs/platform-express": "^10.0.0",
+    "microservicios": "github:PePe-14/arq_protos",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
   },
