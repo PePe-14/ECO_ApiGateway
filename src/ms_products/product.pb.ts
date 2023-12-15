@@ -4,80 +4,85 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "products";
 
+export interface Empty {
+}
+
+export interface Error {
+  message: string;
+}
+
 export interface Product {
   id: string;
   name: string;
-  description: string;
-  /** Add additional product fields here... */
   price: number;
 }
 
-export interface ProductDTO {
+export interface AddProductRequest {
   name: string;
-  description: string;
-  /** Add additional product fields here... */
   price: number;
 }
 
-export interface CreateProductRequest {
-  product: ProductDTO | undefined;
+export interface AddProductResponse {
+  product: Product | undefined;
+  error: Error | undefined;
 }
 
-export interface ProductList {
+export interface getProductByIdRequest {
+  id: string;
+}
+
+export interface getProductByIdResponse {
+  product: Product | undefined;
+  error: Error | undefined;
+}
+
+export interface GetAllProductsResponse {
   products: Product[];
+  error: Error | undefined;
 }
 
-export interface FindProductRequest {
+export interface DeleteProductByIdRequest {
   id: string;
 }
 
-export interface UpdateProductRequest {
-  id: string;
-  product: ProductDTO | undefined;
-}
-
-export interface DeleteProductRequest {
-  id: string;
-}
-
-export interface Empty {
+export interface DeleteProductByIdResponse {
+  isDeleted: boolean;
+  error: Error | undefined;
 }
 
 export const PRODUCTS_PACKAGE_NAME = "products";
 
 export interface ProductServiceClient {
-  createProduct(request: CreateProductRequest): Observable<Product>;
+  addProduct(request: AddProductRequest): Observable<AddProductResponse>;
 
-  findAllProducts(request: Empty): Observable<ProductList>;
+  getProductById(request: getProductByIdRequest): Observable<getProductByIdResponse>;
 
-  findOneProduct(request: FindProductRequest): Observable<Product>;
+  getAllProducts(request: Empty): Observable<GetAllProductsResponse>;
 
-  updateProduct(request: UpdateProductRequest): Observable<Product>;
-
-  deleteProduct(request: DeleteProductRequest): Observable<Empty>;
+  deleteProductById(request: DeleteProductByIdRequest): Observable<DeleteProductByIdResponse>;
 }
 
 export interface ProductServiceController {
-  createProduct(request: CreateProductRequest): Promise<Product> | Observable<Product> | Product;
+  addProduct(
+    request: AddProductRequest,
+  ): Promise<AddProductResponse> | Observable<AddProductResponse> | AddProductResponse;
 
-  findAllProducts(request: Empty): Promise<ProductList> | Observable<ProductList> | ProductList;
+  getProductById(
+    request: getProductByIdRequest,
+  ): Promise<getProductByIdResponse> | Observable<getProductByIdResponse> | getProductByIdResponse;
 
-  findOneProduct(request: FindProductRequest): Promise<Product> | Observable<Product> | Product;
+  getAllProducts(
+    request: Empty,
+  ): Promise<GetAllProductsResponse> | Observable<GetAllProductsResponse> | GetAllProductsResponse;
 
-  updateProduct(request: UpdateProductRequest): Promise<Product> | Observable<Product> | Product;
-
-  deleteProduct(request: DeleteProductRequest): Promise<Empty> | Observable<Empty> | Empty;
+  deleteProductById(
+    request: DeleteProductByIdRequest,
+  ): Promise<DeleteProductByIdResponse> | Observable<DeleteProductByIdResponse> | DeleteProductByIdResponse;
 }
 
 export function ProductServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = [
-      "createProduct",
-      "findAllProducts",
-      "findOneProduct",
-      "updateProduct",
-      "deleteProduct",
-    ];
+    const grpcMethods: string[] = ["addProduct", "getProductById", "getAllProducts", "deleteProductById"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("ProductService", method)(constructor.prototype[method], method, descriptor);

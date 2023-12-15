@@ -28,25 +28,29 @@ export class UserController implements OnModuleInit {
         return data;
     }
 
+    @Get(':id')
+    async findOneUser(@Param('id') request: string): Promise<FindOneUserResponse> {
+      
+      const x = this.userService.findOneUser({
+        id: request
+      });
+
+      if (!isObservable(x)) {
+        return x;
+      }
+      const data = await lastValueFrom(x);
+      return data;
+    }
+
     @Delete(':id')
     async deleteUser(@Param('id') request: DeleteUserRequest): Promise<DeleteUserResponse> {
-        const user = this.userService.deleteUser(request);
+      const user = this.userService.deleteUser(request);
 
-        if (!isObservable(user)) {
-            return user;
-        }
-        const data = await lastValueFrom(user);
-        return data;
-    }
-
-    @Get(':id')
-    async findOneUser(@Param('id')request: FindOneUserRequest): Promise<FindOneUserResponse> {
-    
-      const user = this.userService.findOneUser(request);
       if (!isObservable(user)) {
-        return user;
+          return user;
+      }
+      const data = await lastValueFrom(user);
+      return data;
     }
-    const data = await lastValueFrom(user);
-    return data;
-  }
+
 }
