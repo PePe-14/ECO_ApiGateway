@@ -1,8 +1,7 @@
 import { Body, Controller, Delete, Get, Inject, OnModuleInit, Post } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
-import { AddProductRequest, AddProductResponse, DeleteProductByIdRequest, DeleteProductByIdResponse, GetAllProductsResponse, ProductServiceClient, getProductByIdRequest, getProductByIdResponse } from './product.pb';
-import { PRODUCT_SERVICE_NAME } from './product.pb';
+import { PRODUCT_SERVICE_NAME, AddProductRequest, AddProductResponse, DeleteProductByIdRequest, DeleteProductByIdResponse, GetAllProductsResponse, ProductServiceClient, getProductByIdRequest, getProductByIdResponse } from './product.pb';
 
 @Controller('products')
 export class ProductController implements OnModuleInit {

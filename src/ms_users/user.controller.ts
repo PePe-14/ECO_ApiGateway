@@ -1,56 +1,47 @@
-import { Body, Controller, Delete, Get, Inject, OnModuleInit, Param, Post } from '@nestjs/common';
-import { USER_SERVICE_NAME ,CreateUserRequest, CreateUserResponse, FindOneUserRequest, FindOneUserResponse, DeleteUserRequest, DeleteUserResponse, UserServiceController } from './users.pb';
+import { Body, Controller, Delete, Get, Inject, OnModuleInit, Post } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { isObservable, lastValueFrom } from 'rxjs';
+import { Observable } from 'rxjs';
+import {
+    CreateUserRequest,
+    CreateUserResponse,
+    DeleteUserRequest,
+    DeleteUserResponse,
+    Empty,
+    FindOneUserRequest,
+    FindOneUserResponse,
+    GetAllUsersResponse,
+    UserServiceClient,
+    USER_SERVICE_NAME
+} from './users.pb';
 
 @Controller('users')
 export class UserController implements OnModuleInit {
-    private userService: UserServiceController;
+    private userService: UserServiceClient;
 
     constructor(@Inject(USER_SERVICE_NAME) private client: ClientGrpc) {}
-  
+
     onModuleInit() {
-      this.userService = this.client.getService<UserServiceController>(USER_SERVICE_NAME);
+        this.userService = this.client.getService<UserServiceClient>('UserService');
     }
-  
+
+    @Get()
+    getAllUsers(): Observable<GetAllUsersResponse> {
+        const request: Empty = {};
+        return this.userService.getAllUsers(request);
+    }
+
+    @Get('id')
+    findOneUser(@Body() id: FindOneUserRequest): Observable<FindOneUserResponse> {
+        return this.userService.findOneUser(id);
+    }
+
     @Post()
-    async createUser(@Body() request: CreateUserRequest): Promise<CreateUserResponse> {
-        const user = this.userService.createUser({
-            username: request.username,
-            password: request.password,
-            email: request.email,
-        });
-
-        if (!isObservable(user)) {
-            return user;
-        }
-        const data = await lastValueFrom(user);
-        return data;
+    createUser(@Body() body: CreateUserRequest): Observable<CreateUserResponse> {
+        return this.userService.createUser(body);
     }
 
-    @Get(':id')
-    async findOneUser(@Param('id') request: string): Promise<FindOneUserResponse> {
-      
-      const x = this.userService.findOneUser({
-        id: request
-      });
-
-      if (!isObservable(x)) {
-        return x;
-      }
-      const data = await lastValueFrom(x);
-      return data;
+    @Delete()
+    deleteUser(@Body() id: DeleteUserRequest): Observable<DeleteUserResponse> {
+        return this.userService.deleteUser(id);
     }
-
-    @Delete(':id')
-    async deleteUser(@Param('id') request: DeleteUserRequest): Promise<DeleteUserResponse> {
-      const user = this.userService.deleteUser(request);
-
-      if (!isObservable(user)) {
-          return user;
-      }
-      const data = await lastValueFrom(user);
-      return data;
-    }
-
 }
